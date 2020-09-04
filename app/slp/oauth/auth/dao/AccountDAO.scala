@@ -39,12 +39,11 @@ class AccountDAO @Inject()(slickApi: SlickApi,
     def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
     def email = column[String]("email")
     def password = column[String]("password")
-    def createdAt = column[Timestamp]("created_at")
 
-    def * = (id, email, password, createdAt) <> (Account.tupled, Account.unapply)
+    def * = (id, email, password) <> (Account.tupled, Account.unapply)
   }
 
   val accounts = TableQuery[Accounts]
 }
 
-case class Account(id: Int, email: String, password: String, createdAt: Timestamp)
+case class Account(id: Int, email: String, password: String)
