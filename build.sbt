@@ -23,3 +23,11 @@ libraryDependencies ++= Seq(
 
 // Adds additional packages into conf/routes
 // play.sbt.routes.RoutesKeys.routesImport += "net.nextlogic.binders._"
+routesImport += "play.api.mvc.PathBindable.bindableUUID"
+
+
+maintainer in Linux := "NextLogic Pte Ltd <peter@nextlogic.biz>"
+
+packageSummary in Linux := "API for StudentLogic Pro"
+
+packageDescription := "API for StudentLogic Pro"
