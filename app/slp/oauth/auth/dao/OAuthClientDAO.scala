@@ -7,19 +7,19 @@ import slick.jdbc.JdbcProfile
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class OAuthClient  @Inject()(slickApi: SlickApi,
+class OAuthClientDAO  @Inject()(slickApi: SlickApi,
                              protected val dbConfigProvider: DatabaseConfigProvider)
                             (implicit exec: ExecutionContext) extends HasDatabaseConfig[JdbcProfile] with Logging {
   val dbConfig = dbConfigProvider.get[JdbcProfile]
   import profile.api._
 
-  def findByClientId(clientId: String): Future[Option[OauthClient]] = {
+  def findByClientId(clientId: String): Future[Option[OAuthClient]] = {
     slickApi.dbConfig(DbName("default")).db.run (
       oauthClients.filter(_.clientId === clientId).result.headOption
     )
   }
 
-  def findByClientCredentials(clientId: String, clientSecret: String): Future[Option[OauthClient]] = {
+  def findByClientCredentials(clientId: String, clientSecret: String): Future[Option[OAuthClient]] = {
     slickApi.dbConfig(DbName("default")).db.run (
       oauthClients
         .filter(c => c.clientId === clientId && c.clientSecret === clientSecret && c.grantType === "client_credentials")
@@ -28,7 +28,7 @@ class OAuthClient  @Inject()(slickApi: SlickApi,
   }
 
 
-  class OAuthClients(tag: Tag) extends Table[OauthClient](tag, "oauth_client") {
+  class OAuthClients(tag: Tag) extends Table[OAuthClient](tag, "oauth_client") {
     def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
     def ownerId = column[Int]("owner_id")
     def grantType = column[String]("grant_type")
@@ -36,14 +36,14 @@ class OAuthClient  @Inject()(slickApi: SlickApi,
     def clientSecret = column[String]("client_secret")
     def redirectUri = column[Option[String]]("redirect_uri")
 
-    def * = (id, ownerId, grantType, clientId, clientSecret, redirectUri) <> (OauthClient.tupled, OauthClient.unapply)
+    def * = (id, ownerId, grantType, clientId, clientSecret, redirectUri) <> (OAuthClient.tupled, OAuthClient.unapply)
   }
 
   val oauthClients = TableQuery[OAuthClients]
 
 }
 
-case class OauthClient(
+case class OAuthClient(
                         id: Int,
                         ownerId: Int,
                         grantType: String,
