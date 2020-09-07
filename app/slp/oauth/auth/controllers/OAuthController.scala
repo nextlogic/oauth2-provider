@@ -5,9 +5,9 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 import play.api.Logging
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, Writes}
 import play.api.mvc.{Action, BaseController, ControllerComponents}
-import scalaoauth2.provider.{AccessToken, AuthInfo, AuthorizationCode, AuthorizationRequest, ClientCredential, ClientCredentials, ClientCredentialsRequest, DataHandler, InvalidClient, OAuth2Provider, OAuthGrantType, Password, PasswordRequest, RefreshToken, TokenEndpoint}
+import scalaoauth2.provider.{AccessToken, AuthInfo, AuthorizationCode, AuthorizationRequest, ClientCredential, ClientCredentials, ClientCredentialsRequest, DataHandler, InvalidClient, OAuth2Provider, OAuth2ProviderActionBuilders, OAuthGrantType, Password, PasswordRequest, RefreshToken, TokenEndpoint}
 import slp.oauth.auth.dao.{Account, AccountDAO, OAuthAccessToken, OAuthAccessTokenDAO, OAuthAuthorizationCodeDAO, OAuthClientDAO}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -18,7 +18,19 @@ class OAuthController @Inject()(val controllerComponents: ControllerComponents,
                                accountDAO: AccountDAO,
                                authCodeDAO: OAuthAuthorizationCodeDAO,
                                clientDAO: OAuthClientDAO)
-                               (implicit exec: ExecutionContext) extends BaseController with OAuth2Provider with Logging {
+                               (implicit exec: ExecutionContext) extends BaseController with OAuth2Provider with OAuth2ProviderActionBuilders with Logging {
+
+  implicit val authInfoWrites = new Writes[AuthInfo[Account]] {
+    def writes(authInfo: AuthInfo[Account]) = {
+      Json.obj(
+        "account" -> Json.obj(
+          "email" -> authInfo.user.email
+        ),
+        "clientId" -> authInfo.clientId,
+        "redirectUri" -> authInfo.redirectUri
+      )
+    }
+  }
 
   override val tokenEndpoint = new TokenEndpoint {
     override val handlers = Map(
@@ -33,9 +45,9 @@ class OAuthController @Inject()(val controllerComponents: ControllerComponents,
     issueAccessToken(new MyDataHandler())
   }
 
-//  def resources = AuthorizedAction(new MyDataHandler()) { request =>
-//    Ok(Json.toJson(request.authInfo))
-//  }
+  def resources = AuthorizedAction(new MyDataHandler()) { request =>
+    Ok(Json.toJson(request.authInfo))
+  }
 
   class MyDataHandler extends DataHandler[Account] {
     // common

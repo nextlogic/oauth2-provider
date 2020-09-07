@@ -1,8 +1,6 @@
 package slp.oauth.auth.dao
 
 import java.security.MessageDigest
-import java.sql.Timestamp
-
 import javax.inject.Inject
 import play.api.Logging
 import play.api.db.slick.{DatabaseConfigProvider, DbName, HasDatabaseConfig, SlickApi}
