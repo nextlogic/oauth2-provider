@@ -19,11 +19,15 @@ class OAuthClientDAO  @Inject()(slickApi: SlickApi,
     )
   }
 
-  def findByClientCredentials(clientId: String, clientSecret: String): Future[Option[OAuthClient]] = {
+  def validate(clientId: String, clientSecret: String, grantType: String): Future[Boolean] = {
     slickApi.dbConfig(DbName("default")).db.run (
-      oauthClients
-        .filter(c => c.clientId === clientId && c.clientSecret === clientSecret && c.grantType === "client_credentials")
-        .result.headOption
+      for {
+       clientO <- oauthClients
+        .filter(c => c.clientId === clientId && c.clientSecret === clientSecret)
+        .filter(c => c.grantType === grantType || grantType == "refresh_token")
+        .result
+           .headOption
+      } yield clientO.isDefined
     )
   }
 

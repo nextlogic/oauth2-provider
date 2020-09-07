@@ -1,6 +1,7 @@
 package slp.oauth.auth.dao
 
 import java.sql.Timestamp
+import java.util.Date
 
 import javax.inject.Inject
 import org.joda.time.DateTime
@@ -48,5 +49,5 @@ case class OAuthAuthorizationCode(
                                  oauthClientId: Int,
                                  code: String,
                                  redirectUri: String,
-                                 createdAt: Timestamp
+                                 createdAt: Timestamp = Timestamp.from(new Date().toInstant)
                                  )

@@ -33,8 +33,20 @@
 
   <logger name="play" level="INFO" />
   <logger name="application" level="DEBUG" />
+  <logger name="slp" level="DEBUG" />
 
-  <root level="WARN">
+  <logger name="play.api.db.slick" level="INFO" />
+  <logger name="slick" level="INFO" />
+  <logger name="slick.jdbc.JdbcBackend.statement"  level="WARN" />
+  <logger name="slick.jdbc.JdbcBackend.parameter" level="WARN" />
+  <logger name="slick.jdbc.JdbcBackend.benchmark" level="WARN" />
+  <logger name="com.zaxxer.hikari" level="WARN" />
+
+  <logger name="akka" level="WARN" />
+
+
+
+  <root level="DEBUG">
     <!--<appender-ref ref="ASYNCFILE" />-->
     <appender-ref ref="ASYNCSTDOUT" />
   </root>
