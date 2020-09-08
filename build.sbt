@@ -1,5 +1,5 @@
 name := """oauth2-test"""
-organization := "pro.studentlogic.slp"
+organization := "pro.studentlogic.oauth"
 
 version := "1.0-SNAPSHOT"
 
@@ -28,6 +28,6 @@ routesImport += "play.api.mvc.PathBindable.bindableUUID"
 
 maintainer in Linux := "NextLogic Pte Ltd <peter@nextlogic.biz>"
 
-packageSummary in Linux := "API for StudentLogic Pro"
+packageSummary in Linux := "OAuth2 Provider Example"
 
-packageDescription := "API for StudentLogic Pro"
+packageDescription := "OAuth2 Provider Example"
